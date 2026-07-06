@@ -1,0 +1,15 @@
+.form-div {
+  display: grid;
+  grid-template-columns: 140px 200px;
+  grid-template-areas: 'theText theInput';
+  padding-bottom: 20px;
+  padding-left: 20px;
+}
+
+.form-div label {
+  grid-area: theText;
+}
+
+.form-div input {
+  grid-area: theInput;
+}
