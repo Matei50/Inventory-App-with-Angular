@@ -1,48 +1,91 @@
 <h1>Add Inventory Item</h1>
-<form [formGroup]="addItemForm" (ngSubmit)="onSubmit()">
-  <!-- <p>
-    <mat-form-field apparence="outline">
-      <input matInput placeholder="Item Name" type="text" formControlName="name" required />
-      @if (hasError('name', 'required')) {
-        <mat-error>Item Name is required</mat-error>
-      }
-    </mat-form- <mat-label>Item Name</mat-label>
-     field>
-  </p> -->
-
-  <div class="form-div">
-    <label class="form-div-text"> Item Name: </label>
-    <input type="text" formControlName="name" class="form-div-input" />
+<div class="row">
+  <div class="column">
+    <form [formGroup]="addItemForm" (ngSubmit)="onSubmit()">
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Item Name</mat-label>
+          <input matInput placeholder="Item name" type="text" formControlName="name" required />
+          @if (hasError('name', 'required')) {
+            <mat-error> Name is required </mat-error>
+          }
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <textarea
+            matInput
+            placeholder="Description"
+            formControlName="description"
+            required
+          ></textarea>
+          @if (hasError('description', 'required')) {
+            <mat-error> Description is required </mat-error>
+          }
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>User</mat-label>
+          <input matInput placeholder="User name" type="text" formControlName="user" required />
+          @if (hasError('user', 'required')) {
+            <mat-error> User is required </mat-error>
+          }
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Location</mat-label>
+          <input matInput placeholder="Location" type="text" formControlName="location" required />
+          @if (hasError('location', 'required')) {
+            <mat-error> Location is required </mat-error>
+          }
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Inventory Number</mat-label>
+          <input
+            matInput
+            placeholder="Inventory Number"
+            type="number"
+            formControlName="inventoryNumber"
+            required
+          />
+          @if (hasError('inventoryNumber', 'required')) {
+            <mat-error> Inventory Number is required </mat-error>
+          }
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Created At</mat-label>
+          <input
+            matInput
+            placeholder="Created At"
+            type="date"
+            formControlName="createdAt"
+            required
+          />
+          @if (hasError('createdAt', 'required')) {
+            <mat-error> Created At is required </mat-error>
+          }
+        </mat-form-field>
+      </p>
+      <button mat-raised-button color="primary" type="submit" [disabled]="addItemForm.invalid">
+        {{ submitValue }}
+      </button>
+    </form>
   </div>
-
-  <div class="form-div">
-    <label class="form-div-text"> Description: </label>
-    <textarea id="description" formControlName="description" class="form-div-input"></textarea>
+  <div class="column">
+    @if (itemId) {
+      <div class="centered">
+        <qr-code [value]="itemId.toString()" [size]="350"></qr-code>
+      </div>
+    }
   </div>
+</div>
 
-  <div class="form-div">
-    <label class="form-div-text"> User: </label>
-    <input type="text" formControlName="user" class="form-div-input" />
-  </div>
-
-  <div class="form-div">
-    <label class="form-div-text"> Location: </label>
-    <input type="text" formControlName="location" class="form-div-input" />
-  </div>
-
-  <div class="form-div">
-    <label class="form-div-text"> Inventory Number: </label>
-    <input type="number" formControlName="inventoryNumber" class="form-div-input" />
-  </div>
-
-  <div class="form-div">
-    <label class="form-div-text"> Created At:</label>
-    <input type="text" formControlName="createdAt" class="form-div-input" />
-  </div>
-
-  <div class="form-div">
-    <button class="form-div-text" type="submit">Add Item</button>
-  </div>
-</form>
-
-<p>Form value: {{ addItemForm.value | json }}</p>
+<p>Form values: {{ addItemForm.value | json }}</p>
+<p>Form status: {{ addItemForm.status }}</p>

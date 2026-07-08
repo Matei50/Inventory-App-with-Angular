@@ -12,7 +12,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/select';
 import { QrCodeComponent } from 'ng-qrcode';
-import { NgxScannerQrcodeModule } from 'ngx-scanner-qrcode';
+import { NgxScannerQrcodeComponent } from 'ngx-scanner-qrcode';
 import { ShowItem } from './menu-item/show-item/show-item';
 
 @NgModule({
@@ -29,7 +29,7 @@ import { ShowItem } from './menu-item/show-item/show-item';
     MatFormField,
     MatInputModule,
     QrCodeComponent,
-    NgxScannerQrcodeModule,
+    NgxScannerQrcodeComponent,
   ],
   providers: [provideBrowserGlobalErrorListeners()],
   bootstrap: [App],

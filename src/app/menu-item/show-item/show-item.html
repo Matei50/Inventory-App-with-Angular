@@ -1,1 +1,49 @@
-<p>show-item works!</p>
+@if (itemFound) {
+  <div>
+    <p>Item information</p>
+    <p>
+      <b
+        >ID:<i>{{ item.name }}</i></b
+      >
+    </p>
+    <p>
+      <b
+        >Name:<i>{{ item.description }}</i></b
+      >
+    </p>
+    <p>
+      <b
+        >Description:<i>{{ item.user }}</i></b
+      >
+    </p>
+    <p>
+      <b
+        >User:<i>{{ item.location }}</i></b
+      >
+    </p>
+    <p>
+      <b
+        >Inventory Number:<i>{{ item.inventoryNumber }}</i></b
+      >
+    </p>
+    <p>
+      <b
+        >Created At:<i>{{ item.createdAt }}</i></b
+      >
+    </p>
+    <p>
+      <b
+        >Modified At:<i>{{ item.modifiedAt }}</i></b
+      >
+    </p>
+    <p>
+      <b
+        >Deleted:<i>{{ item.deleted }}</i></b
+      >
+    </p>
+
+    <p><button mat-raised-button (click)="editItem()">Edit</button></p>
+  </div>
+} @else {
+  <div>Item not found!</div>
+}

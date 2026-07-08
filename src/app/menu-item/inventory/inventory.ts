@@ -44,14 +44,18 @@ export class Inventory implements OnInit {
   selection = new SelectionModel<Element>(true, []);
 
   ngOnInit(): void {
-    this.InventoryItems = new MatTableDataSource<InventoryItem>(this.inventoryListMock.getData());
-    this.InventoryItems.paginator = this.paginator; /*paginatorul este setat la data source*/
-    this.InventoryItems.sort = this.sort; /*sortarea este setata la data source*/
+    this.inventoryListMock.getData().subscribe((data: Array<InventoryItem>) => {
+      if (data) {
+        this.InventoryItems = new MatTableDataSource<InventoryItem>(data);
+        this.InventoryItems.paginator = this.paginator; /*paginatorul este setat la data source*/
+        this.InventoryItems.sort = this.sort; /*sortarea este setata la data source*/
+      }
+    });
   }
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.InventoryItems.data.length;
+    const numRows = this.InventoryItems?.data?.length;
     return numSelected === numRows;
   }
 

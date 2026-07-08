@@ -1,12 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InventoryListMock } from '../../app-logic/inventory-list-mock';
-import {
-  Router,
-  ActivatedRoute,
-} from '@angular/router'; /* activated route ia ruta curenta si extrage nr trimis*/
 import { InventoryItem } from '../../app-logic/inventory-item';
-import { Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-item',
@@ -14,20 +10,20 @@ import { Validators } from '@angular/forms';
   templateUrl: './add-item.html',
   styleUrl: './add-item.css',
 })
-export class AddItem implements OnInit {
+export class AddItem {
   addItemForm: FormGroup;
   item!: InventoryItem;
-  /*  cand dam click pe edit vrem sa stim despre ce id e vb*/
   itemId!: number;
+  submitValue: string = 'Add Item';
 
   constructor(
-    private formBuilder: FormBuilder,
+    private fb: FormBuilder,
     private inventoryListMock: InventoryListMock,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
+    private route: ActivatedRoute,
   ) {
-    this.addItemForm = this.formBuilder.group({});
-    this.activatedRoute.params.subscribe((params) => {
+    this.addItemForm = new FormGroup({});
+    this.route.params.subscribe((params) => {
       if (params['id']) {
         this.itemId = params['id'];
       } else {
@@ -37,57 +33,32 @@ export class AddItem implements OnInit {
   }
 
   ngOnInit(): void {
-    this.item =
-      this.itemId == 0 ? new InventoryItem() : this.inventoryListMock.getItemById(this.itemId);
+    if (this.itemId == 0) {
+      this.item = new InventoryItem();
+      this.item.createdAt = new Date();
 
-    // this.addItemForm = this.formBuilder.group({
-    //   name: [this.item.name, Validators.required],
-    //   user: [this.item.user, Validators.required],
-    //   description: [this.item.description, Validators.maxLength(100)],
-    //   location: [this.item.location, Validators.required],
-    //   inventoryNumber: [this.item.inventoryNumber, Validators.required],
-    //   createdAt: [this.item.createdAt?.toISOString().split('T')[0], Validators.required],
-    // });
-    this.addItemForm = this.formBuilder.group({
-      name: [''],
-      description: [''],
-      user: [''],
-      location: [''],
-      inventoryNumber: [0],
-      createdAt: [''],
-    });
+      this.addItemForm = this.fb.group({
+        name: [this.item.name, Validators.required],
+        description: [this.item.description, Validators.maxLength(100)],
+        user: [this.item.user, Validators.required],
+        location: [this.item.location, Validators.required],
+        inventoryNumber: [this.item.inventoryNumber, Validators.required],
+        createdAt: [this.item.createdAt?.toISOString().split('T')[0], Validators.required],
+      });
+    } else {
+    }
 
-    // 2. Verificăm dacă suntem în modul Editare (dacă avem un ID)
-    if (this.itemId && this.itemId !== 0) {
-      // PASUL LIPSĂ: Cerem lista de produse și îl căutăm pe cel care ne interesează
-      const toateProdusele = this.inventoryListMock.getData();
-
-      // Căutăm produsul (folosim == în loc de === pentru că din URL ID-ul vine ca text, ex: "1005")
-      const produsGasit = toateProdusele.find((p) => p.id == this.itemId);
-
-      // 3. Dacă am găsit produsul în lista mock, îl salvăm și populăm formularul
-      if (produsGasit) {
-        this.item = produsGasit; // Salvăm produsul în variabila clasei
-
-        this.addItemForm.patchValue({
-          name: this.item.name,
-          description: this.item.description,
-          user: this.item.user,
-          location: this.item.location,
-          inventoryNumber: this.item.inventoryNumber,
-          createdAt: this.item.createdAt,
-        });
-      }
+    if (this.itemId != 0) {
+      this.submitValue = 'Edit Item';
     }
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.itemId == 0) {
       this.item = new InventoryItem(this.addItemForm.value);
       this.item.createdAt = new Date(this.item.createdAt);
       this.item.modifiedAt = new Date();
       this.item.deleted = false;
-      this.item.id = this.inventoryListMock.getLastId() + 1;
       this.inventoryListMock.addItem(this.item);
     } else {
       this.item.name = this.addItemForm.value.name;
@@ -101,7 +72,7 @@ export class AddItem implements OnInit {
     this.router.navigate(['/inventory']);
   }
 
-  public hasError(controlName: string, errorName: string): boolean {
+  public hasError = (controlName: string, errorName: string) => {
     return this.addItemForm.controls[controlName].hasError(errorName);
-  }
+  };
 }
