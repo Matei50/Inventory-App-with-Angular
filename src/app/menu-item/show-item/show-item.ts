@@ -24,8 +24,10 @@ export class ShowItem implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.item = this.inventoryListMock.getItemById(this.itemId);
-    this.itemFound = this.item ? true : false;
+    this.inventoryListMock.getItemById(this.itemId).subscribe((data) => {
+      this.item = data;
+      this.itemFound = this.item != null;
+    });
   }
 
   editItem() {

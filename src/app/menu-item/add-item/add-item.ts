@@ -22,7 +22,14 @@ export class AddItem {
     private router: Router,
     private route: ActivatedRoute,
   ) {
-    this.addItemForm = new FormGroup({});
+    this.addItemForm = this.fb.group({
+      name: ['', Validators.required],
+      description: ['', Validators.maxLength(100)],
+      user: ['', Validators.required],
+      location: ['', Validators.required],
+      inventoryNumber: ['', Validators.required],
+      createdAt: ['', Validators.required],
+    });
     this.route.params.subscribe((params) => {
       if (params['id']) {
         this.itemId = params['id'];
@@ -34,18 +41,31 @@ export class AddItem {
 
   ngOnInit(): void {
     if (this.itemId == 0) {
+      // partea de adaugare
       this.item = new InventoryItem();
       this.item.createdAt = new Date();
 
-      this.addItemForm = this.fb.group({
-        name: [this.item.name, Validators.required],
-        description: [this.item.description, Validators.maxLength(100)],
-        user: [this.item.user, Validators.required],
-        location: [this.item.location, Validators.required],
-        inventoryNumber: [this.item.inventoryNumber, Validators.required],
-        createdAt: [this.item.createdAt?.toISOString().split('T')[0], Validators.required],
+      this.addItemForm.patchValue({
+        name: this.item.name,
+        description: this.item.description,
+        user: this.item.user,
+        location: this.item.location,
+        inventoryNumber: this.item.inventoryNumber,
+        createdAt: new Date(this.item.createdAt).toISOString().split('T')[0],
       });
     } else {
+      // partea de editare
+      this.inventoryListMock.getItemById(this.itemId).subscribe((data) => {
+        this.item = data;
+        this.addItemForm.patchValue({
+          name: this.item.name,
+          description: this.item.description,
+          user: this.item.user,
+          location: this.item.location,
+          inventoryNumber: this.item.inventoryNumber,
+          createdAt: new Date(this.item.createdAt).toISOString().split('T')[0],
+        });
+      });
     }
 
     if (this.itemId != 0) {
@@ -68,6 +88,7 @@ export class AddItem {
       this.item.inventoryNumber = this.addItemForm.value.inventoryNumber;
       this.item.createdAt = new Date(this.addItemForm.value.createdAt);
       this.item.modifiedAt = new Date();
+      this.inventoryListMock.updateItem(this.item);
     }
     this.router.navigate(['/inventory']);
   }

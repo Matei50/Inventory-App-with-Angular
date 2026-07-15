@@ -30,7 +30,17 @@ export class InventoryListMock {
     );
   }
 
-  getItemById(id: number): InventoryItem {
-    return this.inventoryData.filter((item) => item.id == id)[0];
+  // getItemById(id: number): InventoryItem {
+  //   return this.inventoryData.filter((item) => item.id == id)[0];
+  // }
+
+  updateItem(item: InventoryItem): void {
+    this.httpClient.put<InventoryItem>(this.apiUrl, item).subscribe((data) => {
+      console.log(data);
+    });
+  }
+
+  getItemById(id: number): Observable<InventoryItem> {
+    return this.httpClient.get<InventoryItem>(`${this.apiUrl}/${id}`);
   }
 }
